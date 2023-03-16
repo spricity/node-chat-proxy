@@ -3,7 +3,6 @@ import path from 'path';
 import fetch from 'cross-fetch';
 const app = express()
 import { OpenAI }  from 'openai-streams';
-console.log(OpenAI);
 import multer from 'multer';
 var forms = multer({limits: { fieldSize: 10*1024*1024 }});
 app.use(forms.array()); 
@@ -13,7 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 import { yieldStream } from "yield-stream";
 const DECODER = new TextDecoder();
 app.all(`*`, async (req, res) => {
-console.log(req);
   const stream = await OpenAI(
     "chat",
     {
@@ -26,7 +24,7 @@ console.log(req);
     },
     { apiKey: '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' }
   );
-  console.log(stream);
+  // console.log(stream);
   const chunks = [];
   for await (const chunk of yieldStream(stream)) {
     const value = JSON.parse(DECODER.decode(chunk));
