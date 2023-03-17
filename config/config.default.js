@@ -28,7 +28,7 @@ module.exports = appInfo => {
       enable: false,
       ignoreJSON: true
     },
-    domainWhiteList: ['http://chat.cfyhome.com:8000']
+    domainWhiteList: ['http://chat.cfyhome.com:8000', 'http://dev.cfyhome.com:8000']
   };
 
   config.cors = {

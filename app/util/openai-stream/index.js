@@ -1,19 +1,23 @@
 const fetch = require('cross-fetch')
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, body) => {
+    console.log(req.url, req.headers.authorization, body);
   const url = `https://api.openai.com${req.url}`;
   // 从 header 中取得 Authorization': 'Bearer 后的 token
   const token = req.headers.authorization?.split(' ')[1];
-  if( !token ) return res.status(403).send('Forbidden');
+  if( !token ){
+    throw new Error('Forbidden');
+  }
 
   const openai_key = token.split(':')[0];
-  if( !openai_key ) return res.status(403).send('Forbidden');
+  if( !openai_key ) {
+    throw new Error('Forbidden');
+  }
 
   const proxy_key = token.split(':')[1]||"";  
-  if( process.env.PROXY_KEY && proxy_key !== process.env.PROXY_KEY ) 
-    return res.status(403).send('Forbidden');
-
-    //console.log( req );
+  if( process.env.PROXY_KEY && proxy_key !== process.env.PROXY_KEY ) {
+    throw new Error('Forbidden');
+  }
 
   
   const options = {
@@ -33,16 +37,19 @@ module.exports = async (req, res) => {
       }
   };
   
-  if( req.method.toLocaleLowerCase() === 'post' && req.body ) options.body = JSON.stringify(req.body);
-  // console.log({url, options});
+  if( req.method.toLocaleLowerCase() === 'post' && body ){
+    options.body = JSON.stringify(body);
+  } 
+  
+  console.log({url, options});
 
   try {
     
     // 如果是 chat completion 和 text completion，使用 SSE
-    if( (req.url.startsWith('/v1/completions') || req.url.startsWith('/v1/chat/completions')) && req.body.stream ) {
+    if( (req.url.startsWith('/v1/completions') || req.url.startsWith('/v1/chat/completions')) && body.stream ) {
+      console.log(1111);
       const response = await myFetch(url, options);
-      if( response.ok )
-      {
+      if( response.ok ) {
         // write header
         res.writeHead(200, {
           'Content-Type': 'text/event-stream',
@@ -74,8 +81,8 @@ module.exports = async (req, res) => {
         }
       }
       
-    }else
-    {
+    }else{
+      console.log(222, url);
       const response = await myFetch(url, options);
       console.log(response);
       const data = await response.json();
