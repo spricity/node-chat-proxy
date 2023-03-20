@@ -7,7 +7,6 @@ const SSETransform = require('../util/openai-stream/sse');
 class ApiController extends Controller {
   async openai() {
     const { ctx } = this;
-	  ctx.response.set('Access-Control-Allow-Origin', '*');
     let payload = {};
     if(ctx.method == 'POST') {
       payload = ctx.request.body;
@@ -19,6 +18,7 @@ class ApiController extends Controller {
     try {
       // await openai(ctx.req, ctx.res, ctx.request.body);
       ctx.body = await this.text(payload);
+      // ctx.body = {};
     } catch(e) {
       ctx.body = {success: false, message: e.message};
     }

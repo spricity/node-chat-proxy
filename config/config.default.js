@@ -28,12 +28,19 @@ module.exports = appInfo => {
       enable: false,
       ignoreJSON: true
     },
-    domainWhiteList: ['http://chat.cfyhome.com:8000', 'http://dev.cfyhome.com:8000']
+    // domainWhiteList: ['http://chat.cfyhome.com:8000', 'http://dev.cfyhome.com:8000']
   };
 
   config.cors = {
-    origin:'*',
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+    origin: (ctx) => {
+      const origin = ctx.request.header.origin;
+      if(origin.indexOf("cfyhome.com") >= 0) {
+        return origin;
+      }
+      return "";
+    },
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+    credentials: true
   };
   return {
     ...config,
