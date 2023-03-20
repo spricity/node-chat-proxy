@@ -63,9 +63,9 @@ class ApiController extends Controller {
         });
         steamUtil(response, (data) => {
           if(data ===  '[DONE]') {
-            stream.sendEnd(new TextDecoder().encode(data));
+            stream.sendEnd(new TextEncoder().encode(data));
           } else {
-            stream.send(new TextDecoder().encode(data));
+            stream.send(new TextEncoder().encode(data));
           }
         })
       }
