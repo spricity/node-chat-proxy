@@ -85,7 +85,6 @@ class ApiController extends Controller {
     console.log('start');
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', options);
-      console.log(response);
       if( response.ok ) {
         ctx.set({
           'Content-Type': 'text/event-stream;chartset=UTF-8',

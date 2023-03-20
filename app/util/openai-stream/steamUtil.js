@@ -1,7 +1,6 @@
 const  { createParser } = require("eventsource-parser");
 module.exports = async (response, callback) => {
     const parser = createParser((event) => {
-      console.log('event', event);
       if (event.type === "event") {
         callback(event.data);
       }
@@ -14,15 +13,13 @@ module.exports = async (response, callback) => {
       body.on("readable", () => {
         let chunk;
         while (null !== (chunk = body.read())) {
-          console.log('chunk', chunk);
           parser.feed(chunk.toString());
         }
       });
     } else {
       for await (const chunk of streamAsyncIterable(response.body)) {
-        const str = new TextDecoder().decode(chunk);
-        console.log('decode', str);
-        parser.feed(str);
+        // const str = new TextDecoder().decode(chunk);
+        parser.feed(chunk);
       }
     }
 }
