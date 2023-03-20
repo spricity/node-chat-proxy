@@ -18,8 +18,10 @@ module.exports = async (response, callback) => {
       });
     } else {
       for await (const chunk of streamAsyncIterable(response.body)) {
-        // const str = new TextDecoder().decode(chunk);
-        parser.feed(chunk);
+        console.log(chunk);
+        const str = new TextDecoder().decode(chunk);
+        console.log(str);
+        parser.feed(str);
       }
     }
 }
